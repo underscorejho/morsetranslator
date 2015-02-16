@@ -1,33 +1,4 @@
-#DIR =../include
-#CC=gcc
-#CFLAGS=-I$(IDIR)
-
-#ODIR=obj
-#LDIR =../lib
-
-#LIBS=-lm
-
-#_DEPS = morse.h
-#DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
-
-#_OBJ = main.o morse.o 
-#OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
-
-
-#$(ODIR)/%.o: %.c $(DEPS)
-#	$(CC) -c -o $@ $< $(CFLAGS)
-
-#morsemake: $(OBJ)
-#	gcc -o $@ $^ $(CFLAGS) $(LIBS)
-
-#.PHONY: clean
-
-#clean:
-#	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~ 
-
-####################################################
-## not copy and pasted #############################
-####################################################
+# based off of http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/ 
 
 CC=gcc
 CFLAGS=-I. -std=c99
