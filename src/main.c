@@ -7,80 +7,83 @@
 
 
 
-#include "morse.h"
+#include "../inc/morse.h"
 
+// argv[0] // program name (always is)
+// argv[1] // file one // input file
+// argv[2] // file two // output file
+// argv[3] // mode // -m or -t // to morse or to text
 
-
-int main()
+int main(int argc, char *argv[])
 {
 
-// initialize *FILEs and other vars
+/////////////////////////////// initialize variables //////////////////////////////////
+
   FILE *inFile = NULL;
   FILE *outFile = NULL;
   FILE *keyFile = NULL;
+
+  char *keyStr = NULL;
+  char *inStr = NULL;
   
-  char keyArray[36][8];
-  char userinput[50];
+  char keyArr[36][8];
   
   char ch;
-  char inFileName[20];
-  char outFileName[20];
-  char mode[3];
-
   int i = 0;
 
-// read in key file
-  keyFile = fopen("keyfile.txt", "r");
+/////////////////////////////// handle command line args //////////////////////////////
+
+  // check number of command line args
+  if(checkArgs(4, argc))
+    return 1;
+
+  // check argv[3] is a valid mode
+  if(checkModes(argv[3]))
+    return 1;
+
+//////////////////////////////// handle files /////////////////////////////////////////
+
+  // handle key file
+  keyFile = fopen("../txt/key.txt", "r");
   fileErrorCheck(keyFile);
   
-  readKeyFile(keyFile, keyArray);//////////////////// SEG FAULT HERE I THINK
-  
-  // TEST readKeyFile() // TEST
-  //for (i = 0; i < 36; i++)
-  //  printf("%s", keyArray[i]);
-  // END TEST
+  readFile(keyFile, keyStr);
 
-// set up interface
-//   infile outfile -mode
+  fclose(keyFile);
 
-  printf("Please input your input file, your output file,\n and the mode you wold like to use.\n modes: \n   to morse -m\n   to text  -t\n\n  ex. input.txt output.txt -m\n:");
-  scanf("%s", &userinput);
-  printf("\n");
+  // handle input file
+  inFile = fopen(argv[1], "r");
+  fileErrorCheck(inFile);
   
-// read in user input
+  readFile(inFile, inStr);
 
-  i = 0;
-  
-  while(!isspace(userinput[i]))
+  fclose(inFile);
+
+  // open output file for write
+  outFile = fopen(argv[2], "w");
+  fileErrorCheck(outFile);
+
+//////////////////////////////// translate inputs to outputs //////////////////////////
+
+  if(!strcmp(argv[3], "-m"))
   {
-    inFileName[i] = userinput[i]
-    i++;
+    // text to morse : lookup array [use indicies of shifted ascii values]
+    populateKey(keyStr, keyArr);    
+    toMorse(inStr, outFile, keyArr);
   }
-  
-  i++;
-  
-  while(!isspace(userinput[i]))
+  else if(!strcmp(argv[3], "-t"))
   {
-    outFileName[i - (strlen(inFileName) + 1)] = userinput[i]
-    i++;
-  }
-
-  while(!isspace(userinput[i]))
-  {
-    mode[i - (strlen(inFileName) + 1 + strlen(outFileName) + 1)] = userinput[i]
-    i++;
-  }
-
-  if(!strcmp(mode, "-m"))
-  {
-// text to morse : lookup array [use indicies of shifted ascii values]
-  }
-  else if(!strcmp(mode, "-t"))
-  {
-// morse to text : binary search tree
+    // morse to text : binary search tree
   }
   else
-    printf("Sorry, that is not a valid mode\n");
+    printf("ERROR: wut: invalid mode encountered\n");
+
+//////////////////////////////// close files, free memory, be done ////////////////////
+
+  fclose(outFile);
+
+  free(keyStr);
+  free(inStr);
 
   return 0;
 

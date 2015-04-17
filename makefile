@@ -7,7 +7,7 @@
 # inc/*.h
 
 # project name
-PROJ_NAME=
+PROJ_NAME=morse
 
 # choose a compiler
 # gcc for C programs

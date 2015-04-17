@@ -13,8 +13,16 @@
 #include <string.h>
 #include <ctype.h>
 
+int checkArgs(int n, int argc);
+
 int fileErrorCheck(FILE *aFile);
 
-int readKeyFile(FILE *aFile, char arr[36][8]);
+int checkModes(char *str);
+
+int readFile(FILE *aFile, char *str);
+
+int populateKey(char *str, char key[][8]);
+
+int toMorse(char *str, FILE *aFile, char key[][8]);
 
 #endif
