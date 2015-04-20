@@ -23,10 +23,14 @@ int main(int argc, char *argv[])
   FILE *outFile = NULL;
   FILE *keyFile = NULL;
 
+  // for -m lookup
   char *keyStr = NULL;
   char *inStr = NULL;
   
   char keyArr[36][8];
+
+  // for -t bt lookup
+  struct Node *root;
 
 /////////////////////////////// handle command line args //////////////////////////////
 
@@ -71,6 +75,8 @@ int main(int argc, char *argv[])
   else if(!strcmp(argv[3], "-t"))
   {
     // morse to text : binary search tree
+    root = populateTree(keyStr);
+    toText(inStr, outFile, root);
   }
   else
     printf("ERROR: wut: invalid mode encountered\n");
@@ -81,6 +87,9 @@ int main(int argc, char *argv[])
 
   free(keyStr);
   free(inStr);
+
+  if(root)
+    freeBT(root);
 
   return 0;
 

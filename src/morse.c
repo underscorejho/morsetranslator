@@ -62,6 +62,7 @@ int readFile(FILE *aFile, char **str) // puts a file into a string
   return 0;
 }
 
+// for -m
 int populateKey(char *str, char key[][8])
 {
   int i = 0;
@@ -106,11 +107,152 @@ int toMorse(char *str, FILE *aFile, char key[][8])
     if(isalnum(ch))
     {
       fputs(key[((int)ch) - 48], aFile);
-      fputc('/', aFile);
+      fputc(255, aFile);
     }
     else
       printf("ERROR: wut: unexpected character to translate: %c\n", ch);
   }
 
   return 0;
+}
+
+// for -t
+struct Node *newNode()
+{
+  struct Node *node = NULL;
+  
+  node = malloc(sizeof(struct Node));
+  
+  node->Dot = NULL;
+  node->Dash = NULL;
+
+  return node;
+}
+
+struct Node *populateTree(char *str)
+{
+  struct Node *root = NULL;
+  
+  root = newNode();
+
+  int i = 0;
+  int n = 0;
+
+  char ch = '\0';
+
+  char morseStr[8];
+  char morsech = '\0';
+  
+  for(i = 0; str[i]; i++)
+  {
+    ch = str[i];
+    
+    if(ch == '\n')
+    {
+      morseStr[n] = '\0';
+
+      asciiInit(morsech, morseStr, root);
+
+      for(n = 0; n < 8; n++)
+        morseStr[n] = '\0';  
+    }
+    else if(isspace(ch))
+      continue;
+
+    if(isalnum(ch))
+    {
+      morsech = ch;
+    }
+    else if(ch == '.' || ch == '-')
+    {
+      morseStr[n] = ch;
+      n++;
+    }
+  }
+
+  return root;
+}
+
+struct Node *asciiInit(char ch, char *str, struct Node *root)
+{
+  int i = 0;
+  struct Node *node = NULL;
+
+  if(!(*str))
+    root->ch = ch;
+  else
+  {
+    for(i = 1; str[i]; i++)
+      str[i-1] = str[i];
+
+    if(ch == '.')
+      node = root->Dot;
+    else
+      node = root->Dash;
+    
+    if(!node)
+      node = newNode();
+
+    asciiInit(ch, str, node);
+  }
+
+  return node;
+}
+
+int freeBT(struct Node *root)
+{
+  if((root->Dot) || (root->Dash))
+  {
+    if(root->Dot)
+      freeBT(root->Dot);
+    if(root->Dash)
+      freeBT(root->Dash);
+  }
+  else
+      free(root);
+  return 0;
+}
+
+int toText(char *str, FILE *aFile, struct Node *root)
+{
+  int i = 0;
+  char ch = '\0';
+
+  for(i = 0; str[i]; i++)
+  {
+    ch = str[i];
+    
+    if(isspace(ch))
+      continue;
+    else if(ch == '/')
+      fputc(ch, aFile);
+    else if(ch == '.' || ch == '-')
+    {
+      fputc(asciiGet(root, str), aFile);
+      while(str[i+1] != '/')
+        ++i;
+    }
+    else
+    {
+      printf("ERROR: non-morse character ('-', '.', '/') encountered.\n");
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+char asciiGet(struct Node *root, char *str)
+{
+  char ch = *str;
+
+  if(*(str + 1) == '/')
+    return root->ch;
+  else if(ch == '.')
+    asciiGet(root->Dot, (str+1));
+  else if(ch == '-')
+    asciiGet(root->Dash, (str+1));
+
+  printf("ERROR: wut\n");
+  return 1;
 }
