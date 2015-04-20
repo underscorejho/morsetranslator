@@ -3,6 +3,8 @@
 // morse code translator
 // Jared Henry Oviatt
 
+// A 'wut' error is an error that should be impossible - mostly used for debugging
+
 // FUNCTION HEADERS
 
 #ifndef MORSE_H
@@ -19,7 +21,7 @@ int fileErrorCheck(FILE *aFile);
 
 int checkModes(char *str);
 
-int readFile(FILE *aFile, char *str);
+int readFile(FILE *aFile, char **str);
 
 int populateKey(char *str, char key[][8]);
 

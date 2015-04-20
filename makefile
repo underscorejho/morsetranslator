@@ -17,7 +17,8 @@ CC=gcc
 # -Wall     # turns on most compiler warnings
 # -Wextra   #
 # -std=c99  # use c99 standard when compiling
-CFLAGS= -Wall -Wextra -std=c99
+# -g        # FOR DEBUGGING
+CFLAGS= -Wall -Wextra -std=c99 -g
 
 
 

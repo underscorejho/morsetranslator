@@ -27,9 +27,6 @@ int main(int argc, char *argv[])
   char *inStr = NULL;
   
   char keyArr[36][8];
-  
-  char ch;
-  int i = 0;
 
 /////////////////////////////// handle command line args //////////////////////////////
 
@@ -44,10 +41,10 @@ int main(int argc, char *argv[])
 //////////////////////////////// handle files /////////////////////////////////////////
 
   // handle key file
-  keyFile = fopen("../txt/key.txt", "r");
+  keyFile = fopen("txt/key.txt", "r");
   fileErrorCheck(keyFile);
   
-  readFile(keyFile, keyStr);
+  readFile(keyFile, &keyStr);
 
   fclose(keyFile);
 
@@ -55,7 +52,7 @@ int main(int argc, char *argv[])
   inFile = fopen(argv[1], "r");
   fileErrorCheck(inFile);
   
-  readFile(inFile, inStr);
+  readFile(inFile, &inStr);
 
   fclose(inFile);
 
