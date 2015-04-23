@@ -133,8 +133,6 @@ struct Node *populateTree(char *str)
 {
   struct Node *root = NULL;
   
-  root = newNode();
-
   int i = 0;
   int n = 0;
 
@@ -143,6 +141,8 @@ struct Node *populateTree(char *str)
   char morseStr[8];
   char morsech = '\0';
   
+  root = newNode();
+
   for(i = 0; str[i]; i++)
   {
     ch = str[i];
@@ -151,10 +151,11 @@ struct Node *populateTree(char *str)
     {
       morseStr[n] = '\0';
 
-      asciiInit(morsech, morseStr, root);
+      root = asciiInit(morsech, morseStr, root);
 
       for(n = 0; n < 8; n++)
         morseStr[n] = '\0';  
+      n = 0;
     }
     else if(isspace(ch))
       continue;
@@ -170,33 +171,36 @@ struct Node *populateTree(char *str)
     }
   }
 
+  root->ch = 255;
+
   return root;
 }
 
 struct Node *asciiInit(char ch, char *str, struct Node *root)
 {
-  int i = 0;
   struct Node *node = NULL;
 
   if(!(*str))
     root->ch = ch;
   else
   {
-    for(i = 1; str[i]; i++)
-      str[i-1] = str[i];
-
-    if(ch == '.')
+    if(*str == '.')
+    {
+      if(!(root->Dot))
+        root->Dot = newNode();
       node = root->Dot;
+    }
     else
+    {
+      if(!(root->Dash))
+        root->Dash = newNode();
       node = root->Dash;
-    
-    if(!node)
-      node = newNode();
+    }
 
-    asciiInit(ch, str, node);
+    asciiInit(ch, (str+1), node);
   }
 
-  return node;
+  return root;
 }
 
 int freeBT(struct Node *root)
@@ -225,11 +229,11 @@ int toText(char *str, FILE *aFile, struct Node *root)
     if(isspace(ch))
       continue;
     else if(ch == '/')
-      fputc(ch, aFile);
+      fputc(255, aFile);
     else if(ch == '.' || ch == '-')
     {
       fputc(asciiGet(root, str), aFile);
-      while(str[i+1] != '/')
+      while(!isspace(str[i]))
         ++i;
     }
     else
@@ -246,13 +250,13 @@ char asciiGet(struct Node *root, char *str)
 {
   char ch = *str;
 
-  if(*(str + 1) == '/')
+  if(isspace(*(str + 1)))
     return root->ch;
   else if(ch == '.')
-    asciiGet(root->Dot, (str+1));
+    return asciiGet(root->Dot, (str+1));
   else if(ch == '-')
-    asciiGet(root->Dash, (str+1));
+    return asciiGet(root->Dash, (str+1));
 
   printf("ERROR: wut\n");
-  return 1;
+  return -1;
 }
