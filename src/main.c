@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
   char keyArr[36][8];
 
   // for -t bt lookup
-  struct Node *root;
+  struct Node *root = NULL;
 
 /////////////////////////////// handle command line args //////////////////////////////
 

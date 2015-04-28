@@ -107,7 +107,7 @@ int toMorse(char *str, FILE *aFile, char key[][8])
     if(isalnum(ch))
     {
       fputs(key[((int)ch) - 48], aFile);
-      fputc(255, aFile);
+      fputc(' ', aFile);
     }
     else
       printf("ERROR: wut: unexpected character to translate: %c\n", ch);
