@@ -229,7 +229,7 @@ int toText(char *str, FILE *aFile, struct Node *root)
     if(isspace(ch))
       continue;
     else if(ch == '/')
-      fputc(255, aFile);
+      fputc(' ', aFile);
     else if(ch == '.' || ch == '-')
     {
       fputc(asciiGet(root, (str+i)), aFile);
@@ -251,7 +251,10 @@ char asciiGet(struct Node *root, char *str)
   char ch = *str;
 
   if((*(str + 1)) != '.' && (*(str + 1)) != '-')
-    return root->ch;
+    if(ch == '.')
+      return root->Dot->ch;
+    else
+      return root->Dash->ch;
   else if(ch == '.')
     return asciiGet(root->Dot, (str+1));
   else if(ch == '-')
