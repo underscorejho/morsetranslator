@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
   char *keyStr = NULL;
   char *inStr = NULL;
   
-  char keyArr[36][8];
+  char keyArr[43][8];
 
   // for -t bt lookup
   struct Node *root = NULL;
