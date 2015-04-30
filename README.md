@@ -15,3 +15,9 @@ ex.
     ./bin/morse txt/morse.txt txt/out.txt -t
     
     
+------------------------
+### Installing:
+
+1. Clone the repository
+2. Run `make` in the current directory to create an executable in `./bin` called `morse`
+3. Run `morse` on whatever text you need translated
